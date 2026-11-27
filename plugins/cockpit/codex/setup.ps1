@@ -6,7 +6,7 @@ param(
     [string]$PipelineHome = $(if ($env:PIPELINE_HOME) { $env:PIPELINE_HOME } else { Join-Path $HOME '.pipeline' }),
     [string]$ProfilePath,
     [string]$PipelineSkill,
-    [string]$NodeExe = (Get-Command node.exe -CommandType Application -ErrorAction Stop).Source,
+    [string]$NodeExe = (Get-Command node.exe -CommandType Application -TotalCount 1 -ErrorAction Stop).Source,
     [switch]$Uninstall
 )
 Set-StrictMode -Version Latest

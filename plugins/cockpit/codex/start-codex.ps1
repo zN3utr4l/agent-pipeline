@@ -14,7 +14,7 @@ while ($offset -lt $args.Count) {
 $CodexArguments = @($args | Select-Object -Skip $offset)
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'StartCommon.ps1')
-if (-not $CodexExe) { $CodexExe = (Get-Command codex.exe -CommandType Application -ErrorAction Stop).Source }
+if (-not $CodexExe) { $CodexExe = (Get-Command codex.exe -CommandType Application -TotalCount 1 -ErrorAction Stop).Source }
 if ($headless -or $MyInvocation.PipelineLength -gt 1 -or $MyInvocation.ExpectingInput -or -not (Test-CockpitInteractive $CodexArguments (-not [Console]::IsInputRedirected) (-not [Console]::IsOutputRedirected))) {
     $parentScope = $env:CODEX_COCKPIT_SCOPE
     try {
@@ -46,7 +46,7 @@ $scopeFile = $null
 $oldScope = $env:CODEX_COCKPIT_SCOPE
 $codexExit = 1
 try {
-    $terminal = Get-Command wt.exe -CommandType Application -ErrorAction SilentlyContinue
+    $terminal = Get-Command wt.exe -CommandType Application -TotalCount 1 -ErrorAction SilentlyContinue
     if ($terminal -and $env:WT_SESSION) {
         $id = [guid]::NewGuid().ToString('N')
         $scopeFile = Join-Path $pipelineHome_ "cockpit/codex/scopes/$id.json"

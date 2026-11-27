@@ -409,7 +409,7 @@ if ([IO.Path]::GetDirectoryName($Brief) -ine $RunDir) {
 $promptPath = Join-Path $RunDir 'executor-prompt.md'
 $briefBody = Get-Content -Raw -LiteralPath $Brief
 [IO.File]::WriteAllText($promptPath, (Get-ExecutorRoleHeader $Brief $deadline $RunDir) + $briefBody, [Text.UTF8Encoding]::new($false))
-$script:ClaudeExe = (Get-Command claude -ErrorAction Stop).Source
+$script:ClaudeExe = (Get-Command claude -TotalCount 1 -ErrorAction Stop).Source
 
 $authInfo = New-ClaudeProcessInfo @('auth', 'status', '--json')
 $authProcess = [Diagnostics.Process]::new()

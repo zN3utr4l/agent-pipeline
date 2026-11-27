@@ -1,9 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync, realpathSync, symlinkSync } from 'node:fs';
+import { copyFileSync, mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync, realpathSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { delimiter, join } from 'node:path';
 import { createInterface } from 'node:readline';
 
 test('installed Codex applies exact SKILL.md path suppression (local protocol only)', {timeout:60000}, async () => {
@@ -16,8 +16,18 @@ test('installed Codex applies exact SKILL.md path suppression (local protocol on
   writeFileSync(join(source,'SKILL.md'),'---\nname: cockpit-linked-fixture\ndescription: Linked fixture.\n---\nNo actions.\n');
   const linked=join(work,'home/.codex/skills/cockpit-linked-fixture');symlinkSync(source,linked,'junction');
   writeFileSync(join(work,'home/.codex/config.toml'),'');
-  const setup=spawnSync('pwsh',['-NoProfile','-File','plugins/cockpit/codex/setup.ps1','-CodexHome',join(work,'home/.codex'),'-ClaudeHome',join(work,'claude'),'-AgentsSkills',join(work,'agents/skills'),'-PipelineHome',join(work,'state')],{encoding:'utf8',windowsHide:true});
+  const firstBin = join(work, 'node-first');
+  const secondBin = join(work, 'node-second');
+  // Setup records the executable path without running it, so small stand-ins suffice.
+  for (const bin of [firstBin, secondBin]) {
+    mkdirSync(bin);
+    copyFileSync(join(process.env.SystemRoot, 'System32', 'where.exe'), join(bin, 'node.exe'));
+  }
+  const setupPath = [firstBin, secondBin, process.env.PATH].join(delimiter);
+  const setup=spawnSync('pwsh',['-NoProfile','-File','plugins/cockpit/codex/setup.ps1','-CodexHome',join(work,'home/.codex'),'-ClaudeHome',join(work,'claude'),'-AgentsSkills',join(work,'agents/skills'),'-PipelineHome',join(work,'state')],{encoding:'utf8',windowsHide:true,env:{...process.env,PATH:setupPath}});
   assert.equal(setup.status,0,setup.stderr);
+  const install = JSON.parse(readFileSync(join(work, 'home/.codex/cockpit/install.json'), 'utf8'));
+  assert.equal(install.nodeExe, join(firstBin, 'node.exe'), 'installer did not choose the first node.exe on PATH');
   const disabled=[skill,join(linked,'SKILL.md')].map(path=>`{path=${JSON.stringify(path.replaceAll('\\','/'))},enabled=false}`).join(',');
   const child=spawn(process.env.CODEX_NATIVE_EXE || 'codex.exe',['--enable','hooks','-c',`skills.config=[${disabled}]`,'app-server'],{
     cwd:join(work,'repo'),windowsHide:true,env:{...process.env,CODEX_HOME:join(work,'home/.codex'),USERPROFILE:join(work,'home'),HOME:join(work,'home')},stdio:['pipe','pipe','pipe'],

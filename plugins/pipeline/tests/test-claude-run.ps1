@@ -766,7 +766,7 @@ exit /b 0
 
     # --- A launcher crash after the run directory exists still leaves a report; the exit stays the crash exit.
     Remove-Item Env:FAKE_CLAUDE_AUTH -ErrorAction SilentlyContinue
-    $gitBin = Split-Path (Get-Command git).Source -Parent
+    $gitBin = Split-Path (Get-Command git -TotalCount 1).Source -Parent
     $env:PATH = "$env:SystemRoot\System32;$PSHOME;$gitBin"
     $runCrash = Join-Path $work 'run-crash'
     $crash = Invoke-ClaudeRun @('-Repo', 'sample-app', '-Brief', $brief, '-RunDir', $runCrash, '-SkipQuotaCheck')

@@ -437,6 +437,14 @@ $nativeCases = @(
 $details = [System.Collections.Generic.List[string]]::new()
 $failures = 0
 
+$fixtureClock = @{ Elapsed = [TimeSpan]::Zero }
+$getFixtureElapsed = { $fixtureClock.Elapsed }.GetNewClosure()
+function Start-Sleep {
+    param([ValidateRange(1, [int]::MaxValue)][int]$Milliseconds)
+
+    $fixtureClock.Elapsed += [TimeSpan]::FromMilliseconds($Milliseconds)
+}
+
 foreach ($case in $cases) {
     $global:FakeGhCalls = [System.Collections.ArrayList]::new()
     $runQueues = @{}
@@ -445,7 +453,8 @@ foreach ($case in $cases) {
     }
     $global:FakeGh = @{ Pr = (New-Queue -Entries $case.Pr); Runs = $runQueues }
 
-    $params = @{ Repo = $repo; IntervalSeconds = 1; TimeoutMinutes = 0.02 }
+    $fixtureClock.Elapsed = [TimeSpan]::Zero
+    $params = @{ Repo = $repo; IntervalSeconds = 1; TimeoutMinutes = 0.02; GetElapsed = $getFixtureElapsed }
     foreach ($key in $case.Params.Keys) {
         $params[$key] = $case.Params[$key]
     }

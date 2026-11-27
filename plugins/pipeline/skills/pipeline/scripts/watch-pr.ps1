@@ -18,7 +18,10 @@ param(
     [ValidateScript({ $_ -gt 0 })]
     [double]$TimeoutMinutes,
 
-    [string]$LogPath
+    [string]$LogPath,
+
+    [Parameter(DontShow)]
+    [scriptblock]$GetElapsed = { $timer.Elapsed }
 )
 
 $successStates = @('SUCCESS', 'NEUTRAL', 'SKIPPED')
@@ -298,10 +301,11 @@ function Get-RunStates {
 
 try {
     while ($true) {
-        if ($timer.Elapsed -ge $timeout) {
+        $elapsed = & $GetElapsed
+        if ($elapsed -ge $timeout) {
             Write-StateChange -Signature 'TIMEOUT' -Event (
                 New-Event -State 'TIMEOUT' -Extra ([ordered]@{
-                    elapsedSeconds = [math]::Round($timer.Elapsed.TotalSeconds, 1)
+                    elapsedSeconds = [math]::Round($elapsed.TotalSeconds, 1)
                     note = 'observation window ended; no run was cancelled'
                 })
             )
@@ -354,7 +358,7 @@ try {
 
         $remainingMilliseconds = [math]::Max(
             1,
-            [math]::Floor(($timeout - $timer.Elapsed).TotalMilliseconds)
+            [math]::Floor(($timeout - (& $GetElapsed)).TotalMilliseconds)
         )
         $sleepMilliseconds = [math]::Min($IntervalSeconds * 1000, $remainingMilliseconds)
         Start-Sleep -Milliseconds $sleepMilliseconds

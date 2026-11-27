@@ -42,7 +42,7 @@ node "%~dp0long-step-executor.js" %*
 @echo off
 echo {"providers":[{"id":"codex","available":true,"windows":[{"label":"Weekly","usedPct":10}]},{"id":"claude","available":true,"windows":[{"label":"Weekly","usedPct":10}]}]}
 '@
-    $env:PATH = "$fakeBin;$PSHOME;$(Split-Path (Get-Command node).Source);$(Split-Path (Get-Command git).Source);$env:SystemRoot\System32"
+    $env:PATH = "$fakeBin;$PSHOME;$(Split-Path (Get-Command node -TotalCount 1).Source);$(Split-Path (Get-Command git -TotalCount 1).Source);$env:SystemRoot\System32"
     $older = Start-Process node -ArgumentList '-e "setInterval(() => {}, 1000)"' -WindowStyle Hidden -PassThru
     $env:LONG_STEP_OLDER = [string]$older.Id
     foreach ($provider in @('codex','claude')) {

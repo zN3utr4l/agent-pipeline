@@ -543,7 +543,7 @@ exit /b 0
     $unknownReview = Invoke-CodexRun @('-Repo', 'sample-app', '-Brief', $brief, '-Resume', 'ffffffff-0000-0000-0000-000000000000', '-ReadOnly', '-Model', 'gpt-6.2-sol', '-ReasoningEffort', 'high', '-DryRun')
     Assert-True ($unknownReview.ExitCode -eq 3) 'read-only resume accepted an unknown session'
     $noCodexPath = $env:PATH
-    $gitOnlyBin = Split-Path (Get-Command git).Source -Parent
+    $gitOnlyBin = Split-Path (Get-Command git -TotalCount 1).Source -Parent
     $env:PATH = "$env:SystemRoot\System32;$PSHOME;$gitOnlyBin"
     try {
         $noCodexReview = Invoke-CodexRun @('-Repo', 'sample-app', '-Brief', $brief, '-ReadOnly', '-SkipQuotaCheck')
@@ -1054,7 +1054,7 @@ Start-Sleep -Seconds 20
     Assert-True ($metaPreflight.reportSynthesized -eq $true -and (Get-Content -Raw -LiteralPath (Join-Path $runPreflight 'report.md')) -match '(?s)^STATUS: failed.*Cause: preflight: sandbox helper missing') 'preflight exit left no synthesized report'
 
     # --- A launcher crash after the run directory exists still leaves a report; the exit stays the crash exit.
-    $gitBin = Split-Path (Get-Command git).Source -Parent
+    $gitBin = Split-Path (Get-Command git -TotalCount 1).Source -Parent
     $env:PATH = "$env:SystemRoot\System32;$PSHOME;$gitBin"
     $runCrash = Join-Path $work 'run-crash'
     New-Item -ItemType Directory -Path $runCrash | Out-Null

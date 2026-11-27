@@ -862,8 +862,8 @@ function Invoke-QuotaReading([int]$TimeoutSeconds) {
     # npm installs codeburn.cmd and codeburn.ps1 side by side, and a bare
     # `Get-Command codeburn` in pwsh returns the script, which Process.Start
     # cannot launch: ask for the executable shim first.
-    $command = Get-Command codeburn.cmd -ErrorAction SilentlyContinue
-    if ($null -eq $command) { $command = Get-Command codeburn -ErrorAction SilentlyContinue }
+    $command = Get-Command codeburn.cmd -TotalCount 1 -ErrorAction SilentlyContinue
+    if ($null -eq $command) { $command = Get-Command codeburn -TotalCount 1 -ErrorAction SilentlyContinue }
     if ($null -eq $command) { return 'skipped: codeburn is not on PATH' }
     $arguments = @('quota', '--format', 'json', '--no-color')
     $info = [Diagnostics.ProcessStartInfo]::new()

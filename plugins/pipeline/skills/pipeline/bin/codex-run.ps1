@@ -445,7 +445,7 @@ $briefBody = [IO.File]::ReadAllText($Brief)
 $executorRole = if ($ReadOnly) { $reviewContract } else { Get-ExecutorRoleHeader $Brief $deadline $RunDir }
 [IO.File]::WriteAllText($promptPath, $executorRole + $briefBody, [Text.UTF8Encoding]::new($false))
 
-$codex = (Get-Command codex -ErrorAction Stop).Source
+$codex = (Get-Command codex -TotalCount 1 -ErrorAction Stop).Source
 $finalMessagePath = Join-Path $RunDir ('.report-final-' + [guid]::NewGuid().ToString('N') + $(if ($ReadOnly) { '.json' } else { '.md' }))
 if ($ReadOnly -and (Test-Path -LiteralPath $reviewPath)) { Remove-Item -LiteralPath $reviewPath -Force }
 $arguments = Get-CodexArguments $repoInfo.Path $finalMessagePath $Resume $skipGitCheck

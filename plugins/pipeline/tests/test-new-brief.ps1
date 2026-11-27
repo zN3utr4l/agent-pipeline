@@ -92,7 +92,7 @@ try {
         Assert-True ($rejectedEffort.ExitCode -ne 0 -and $rejectedEffort.Output -match 'ValidateSet' -and $rejectedEffort.Output -match 'medium,high,xhigh') "$executor low effort must fail parameter validation with the allowed set"
     }
     $effortPath = $env:PATH
-    $effortGit = Split-Path (Get-Command git).Source -Parent
+    $effortGit = Split-Path (Get-Command git -TotalCount 1).Source -Parent
     try {
         $env:PATH = "$PSHOME;$env:SystemRoot\System32;$effortGit"
         foreach ($route in @(@('LOW','claude-haiku-5-5','medium'),@('MEDIUM','claude-sonnet-5-5','medium'),@('HIGH','claude-opus-5-5','high'))) {

@@ -31,4 +31,4 @@ export const registryOf = (text: string): Registry => {
   return value
 }
 
-export const TEAM_REGISTRY_COMMAND = "$file = if (Test-Path -LiteralPath $env:CC_LAUNCHER) { Get-Item -LiteralPath $env:CC_LAUNCHER } else { Get-Item -LiteralPath (Get-Command $env:CC_LAUNCHER -ErrorAction Stop).Source }; if ($file.LinkType) { $file = $file.ResolveLinkTarget($true) }; $root = Get-Item -LiteralPath (Split-Path (Split-Path $file.FullName -Parent) -Parent); if ($root.LinkType) { $root = $root.ResolveLinkTarget($true) }; Join-Path $root.FullName 'config\\executors.json'"
+export const TEAM_REGISTRY_COMMAND = "$file = if (Test-Path -LiteralPath $env:CC_LAUNCHER) { Get-Item -LiteralPath $env:CC_LAUNCHER } else { Get-Item -LiteralPath (Get-Command $env:CC_LAUNCHER -TotalCount 1 -ErrorAction Stop).Source }; if ($file.LinkType) { $file = $file.ResolveLinkTarget($true) }; $root = Get-Item -LiteralPath (Split-Path (Split-Path $file.FullName -Parent) -Parent); if ($root.LinkType) { $root = $root.ResolveLinkTarget($true) }; Join-Path $root.FullName 'config\\executors.json'"

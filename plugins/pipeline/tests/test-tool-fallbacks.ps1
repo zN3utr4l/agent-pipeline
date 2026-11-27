@@ -24,7 +24,7 @@ if "%~1"=="auth" (
 echo {"type":"result","is_error":false,"result":"STATUS: ready_for_review","session_id":"fixture-claude","num_turns":1,"usage":{"cache_read_input_tokens":1000},"permission_denials":[]}
 exit /b 0
 '@ | Set-Content (Join-Path $bin 'claude.cmd') -Encoding ascii
-    $gitBin = Split-Path (Get-Command git).Source -Parent
+    $gitBin = Split-Path (Get-Command git -TotalCount 1).Source -Parent
     $env:PATH = "$bin;$env:SystemRoot\System32;$PSHOME;$gitBin"
     . (Join-Path $skill 'bin\RunCommon.ps1')
     Assert-True (-not (Get-Command codex -ErrorAction SilentlyContinue) -and -not (Get-Command codeburn -ErrorAction SilentlyContinue)) 'fixture must omit optional tools'
