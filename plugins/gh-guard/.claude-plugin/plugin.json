@@ -1,0 +1,9 @@
+{
+  "name": "gh-guard",
+  "version": "0.1.0",
+  "description": "Blocks a GitHub CLI command when the active account differs from the one configured for its folder.",
+  "author": {
+    "name": "Giuseppe Chirico",
+    "url": "https://github.com/zN3utr4l"
+  }
+}

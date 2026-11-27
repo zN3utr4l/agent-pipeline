@@ -1,0 +1,23 @@
+{
+  "name": "agent-pipeline",
+  "owner": {
+    "name": "Giuseppe Chirico"
+  },
+  "plugins": [
+    {
+      "name": "pipeline",
+      "source": "./plugins/pipeline",
+      "description": "Coordinate Codex and Claude executors with briefs, reviews, and verifiable test gates."
+    },
+    {
+      "name": "cockpit",
+      "source": "./plugins/cockpit",
+      "description": "See executor runs, GitHub pull requests and runners, quota, and notifications in Claude Code and Codex."
+    },
+    {
+      "name": "gh-guard",
+      "source": "./plugins/gh-guard",
+      "description": "Check the active GitHub CLI account against the rules for the current folder."
+    }
+  ]
+}

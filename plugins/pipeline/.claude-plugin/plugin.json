@@ -1,0 +1,9 @@
+{
+  "name": "pipeline",
+  "description": "Orchestration, briefs, Codex and Claude executors, reviews, and verifiable gates with local state stored outside the plugin.",
+  "author": {
+    "name": "Giuseppe Chirico",
+    "url": "https://github.com/zN3utr4l"
+  },
+  "agents": ["./skills/pipeline/agents/implementer.md"]
+}

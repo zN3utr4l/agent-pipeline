@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "defaults": {
+    "autoCompactTokens": 200000,
+    "claudeAutoCompactTokens": 400000,
+    "maxFixLoops": 2,
+    "gateRetries": 1,
+    "quotaCapPercent": 85,
+    "quotaCapPercentResume": 85,
+    "quotaCacheTtlSeconds": 600,
+    "quotaRefreshTimeoutSeconds": 150,
+    "maxResumeContextTokens": 150000,
+    "maxBudgetUsd": 30,
+    "briefWarnChars": 6000,
+    "model": "claude-opus-5-5",
+    "codexModel": "gpt-6.2-sol"
+  },
+  "executors": {
+    "acme-api": {
+      "repo": "C:\\Example\\Checkouts\\acme-api",
+      "github": "acme-example/acme-api",
+      "gateRetries": 0,
+      "gateTimeoutMinutes": 30,
+      "heavyGate": true,
+      "logDir": ".pipeline-logs",
+      "commands": {
+        "targetedTest": "dotnet test tests/Acme.Api.Tests -c Release --filter \"FullyQualifiedName~<target>\"",
+        "analyze": "dotnet build Acme.Api.sln -c Release",
+        "regenerate": "none",
+        "fullGate": [
+          "dotnet test tests/Acme.Api.Tests -c Release --filter \"Category=Integration\"",
+          "dotnet test tests/Acme.Worker.Tests -c Release --filter \"Category=Integration\""
+        ],
+        "e2e": "none"
+      },
+      "briefNotes": [
+        "Before the report, run the whole unit suite of each test project you touched. The full gate runs the API and worker integration suites."
+      ]
+    },
+    "acme-web": {
+      "repo": "C:\\Example\\Checkouts\\acme-web",
+      "github": "acme-example/acme-web",
+      "gateOwner": "executor",
+      "logDir": ".pipeline-logs",
+      "commands": {
+        "targetedTest": "npm test -- <target>",
+        "analyze": "npm run lint",
+        "regenerate": "npm run generate",
+        "fullGate": "npm test",
+        "e2e": "npm run test:e2e -- <spec>"
+      },
+      "briefNotes": [
+        "Run `npm ci` in a fresh checkout before testing."
+      ]
+    },
+    "acme-docs": {
+      "repo": "C:\\Example\\Checkouts\\acme-docs",
+      "github": "acme-example/acme-docs",
+      "gateOwner": "executor",
+      "logDir": ".pipeline-logs",
+      "commands": {
+        "targetedTest": "none",
+        "analyze": "none",
+        "regenerate": "none",
+        "fullGate": "npm --prefix website run build",
+        "e2e": "none"
+      }
+    }
+  }
+}

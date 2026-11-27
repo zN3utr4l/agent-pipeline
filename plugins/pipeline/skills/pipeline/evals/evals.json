@@ -1,0 +1,301 @@
+{
+  "skill_name": "pipeline",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "raw-request: I want to add a monthly average price comparison to SampleApp, and I have yet to decide how to display it. Handle everything from analysis through review. Leave the changes unmerged.",
+      "expected_output": "The orchestrator classifies the work, inspects the repository, asks only material questions, applies brainstorming, and stops for design approval before planning or dispatch.",
+      "files": [],
+      "expectations": [
+        "Does not dispatch or implement before design approval",
+        "Uses the Superpowers brainstorming workflow",
+        "Keeps merge unauthorized"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "approved-spec: The spec docs/superpowers/specs/2026-09-03-offline-sync-design.md is approved. Continue the pipeline until you present the plan to me. Wait for my approval before implementing it.",
+      "expected_output": "The orchestrator resumes at writing-plans, creates and self-reviews the plan, then waits for execution authorization.",
+      "files": [],
+      "expectations": [
+        "Does not repeat brainstorming",
+        "Uses the Superpowers writing-plans workflow",
+        "Stops at the execution approval gate"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "approved-plan: Execute the approved plan docs/superpowers/plans/2026-09-03-export-csv.md in SampleApp with Codex Sol 5.6, then review the work yourself. Keep the branch local.",
+      "expected_output": "The orchestrator preflights the repository, creates one brief, dispatches a separate pinned Codex executor, reviews all changes and checks, and leaves the reviewed branch local.",
+      "files": [],
+      "expectations": [
+        "Skips completed planning",
+        "Keeps orchestrator and executor contexts separate",
+        "Does not push"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "review-only: Codex has already finished the run <state>\\runs\\sample-app\\2026-09-03-export. Review everything and send any issues back to the same executor.",
+      "expected_output": "The orchestrator starts from the report, verifies the complete diff and evidence economically, and uses the existing session for a consolidated fix loop if needed.",
+      "files": [],
+      "expectations": [
+        "Does not create a new plan or executor",
+        "Reads the full report and all changed logic, runs git diff --check, and selects an orthogonal targeted regression",
+        "Does not unconditionally duplicate a fresh green full gate on an identical tree",
+        "Resumes the same executor for fixes"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "manual-opus-handoff: The approved plan spans four repositories. Codex is the orchestrator and reviewer, Opus 5.5 is the only executor, and I will hand off between the two apps manually. Prepare everything I need to copy.",
+      "expected_output": "After authorization, the Codex orchestrator prepares each branch and concise brief, then emits one placeholder-free claude-run.ps1 command and RETURN TO CODEX block per repository. The launcher verifies authentication and writes artifacts; Codex reviews them.",
+      "files": [],
+      "expectations": [
+        "Does not emit the final handoff before the branch and brief exist",
+        "Provides one complete copy block per repository with no unresolved placeholders",
+        "Uses claude-run.ps1 rather than an in-session agent",
+        "Tells the user to return the run directory to the same Codex session",
+        "Keeps review and fix-loop ownership in the Codex orchestrator"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "economy-leaf-change: The approved plan changes only a date formatter in a Dart helper and its unit test. CI runs tests, analysis, and builds. Implement and review the change, then leave the branch local.",
+      "expected_output": "The change is classified LOW; implementation uses the nearest unit test, completion uses affected tests plus the smallest relevant analyzer check, and neither role runs the full suite merely by default.",
+      "files": [],
+      "expectations": [
+        "Classifies the change LOW from the narrow diff and existing CI",
+        "Runs the nearest test during TDD and a minimal affected final gate",
+        "Leaves the full matrix to remote CI and does not run a full suite per task",
+        "Records command, environment, and the relevant source/content fingerprint for green evidence"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "economy-high-risk: Apply the approved plan for a Supabase migration that transforms user data. CI enforces 90% overall coverage. Keep the privacy and migration checks and leave the branch local.",
+      "expected_output": "The migration is classified HIGH, privacy and migration safeguards remain intact, targeted migration tests run first, and exactly one local CI-equivalent gate runs on the final tree; the global threshold is relevant because coverage-counted executable code changed.",
+      "files": [],
+      "expectations": [
+        "Classifies the migration HIGH and does not weaken privacy or migration checks",
+        "Runs targeted migration tests during implementation",
+        "Runs one local full CI-equivalent gate on the final tree, not once per task; coverage applies because counted executable code changed",
+        "Uses no more workers than CI specifies"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "economy-unchanged-evidence: Review the run. The executor already has a passing test:ci run with the full command and counts, HEAD abc123, and a clean working tree. Verify that the branch and tree still match. Keep the branch local.",
+      "expected_output": "The reviewer independently reads all changed logic, runs git diff --check and one orthogonal targeted regression, and reuses the fresh full-gate evidence only after matching command, environment, and relevant source/content fingerprint; HEAD alone is insufficient.",
+      "files": [],
+      "expectations": [
+        "Validates exact command, environment, exit/counts, and relevant source/content fingerprint",
+        "Does not duplicate the executor's fresh green full gate",
+        "Still runs git diff --check and an orthogonal targeted regression",
+        "Treats any changed tree as stale evidence"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "economy-ui-e2e: The approved plan changes only the web onboarding flow and two components. GitHub Actions runs 80 Playwright tests across multiple browsers. Implement, verify, and open the authorized PR.",
+      "expected_output": "Local verification covers affected component tests and only the changed onboarding E2E flow; the remote CI matrix remains the full gate and is watched through the state-change helper.",
+      "files": [],
+      "expectations": [
+        "Limits local E2E to the changed onboarding flow",
+        "Does not run the full browser matrix locally",
+        "Inspects the required phone and desktop UI evidence",
+        "Uses scripts/watch-pr.ps1 pinned to the reviewed head SHA and the selected workflow run ids unless the user requires another command"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "economy-failed-ci: The authorized PR has one failed CI job in the export_csv test. All other jobs passed. Diagnose and fix the failure, then bring the PR back to the final gate with minimal overhead.",
+      "expected_output": "The orchestrator obtains only the failed job/log, diagnoses and reruns the failing slice, sends one consolidated fix loop, pushes once when authorized, and lets CI rerun without replaying an unchanged full suite.",
+      "files": [],
+      "expectations": [
+        "Fetches only failed CI evidence rather than every log",
+        "Diagnoses and reruns the failing export_csv slice before any broader gate",
+        "Never reruns an unchanged full suite",
+        "Pushes the fix once under existing authorization and watches the CI rerun pinned to the new head SHA and the rerun's workflow run ids"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "economy-non-repository-review: The target pipeline-tools is outside Git. The executor changed the five files named in the brief. Review the changes independently and use the state that is actually available.",
+      "expected_output": "The reviewer reads all changed logic, reconciles the complete named file list and hashes, runs the smallest applicable parser/validator, and does not run git diff --check or invent repository state.",
+      "files": [],
+      "expectations": [
+        "Does not run git or claim branch, commit, HEAD, or tree state",
+        "Verifies the complete named file list and current hashes",
+        "Runs the smallest applicable parser or validator independently",
+        "Reads every file carrying changed logic in full"
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "economy-docs-global-coverage: The repository enforces 90% overall coverage and the LOW-risk diff touches only the README and non-executable metadata. Verify the changes without spending a full-suite run.",
+      "expected_output": "The reviewer runs affected documentation or metadata validation and does not run a local full suite solely because the repository has a global coverage threshold; no coverage-counted executable code changed and no concrete coverage risk was found.",
+      "files": [],
+      "expectations": [
+        "Classifies the documentation/metadata-only change LOW",
+        "Records that no coverage-counted executable code changed",
+        "Does not trigger a full suite from the global threshold alone",
+        "Allows a full gate only if a concrete coverage-risk finding appears"
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "economy-bounded-effort: The detailed LOW-risk design has already been approved. Implement the local change with Codex under that approval.",
+      "expected_output": "The orchestrator creates a concise bounded brief without repeating planning or approval, selects medium reasoning effort with a stated LOW/well-specified reason, and keeps the reviewer independent.",
+      "files": [],
+      "expectations": [
+        "Uses the approved bounded design directly",
+        "Passes -ReasoningEffort medium to the wrapper",
+        "Assigns one owner per expensive final gate"
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "economy-capability-preflight: The repository uses a Flutter worktree, and we do not know whether the sandbox can write Git metadata and the SDK cache.",
+      "expected_output": "Unless access is already known blocked, the orchestrator requires one capability probe inside the isolated executor before cache tests or commit; a host probe is not treated as proof and denied paths are not retried.",
+      "files": [],
+      "expectations": [
+        "Uses explicit RepoPath and FlutterSdkPath",
+        "Does not run Flutter to discover permissions or alter existing files",
+        "Assigns blocked verification or commit ownership to the reviewer"
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "economy-executor-route: The approved MEDIUM-risk design touches two files and a test in acme-api. The subsequent fix loop will have at most three findings. Choose how to launch the Opus executor and explain the cost, then review the result.",
+      "expected_output": "The orchestrator creates one concise brief and respects the explicit Opus choice by launching claude-opus-5-5 with medium effort through claude-run.ps1, provided quota has headroom; the main session then reviews the result.",
+      "files": [],
+      "expectations": [
+        "Uses claude-run.ps1 with claude-opus-5-5 and medium effort",
+        "Runs only one executor and preserves launcher guards",
+        "Keeps review in the main session",
+        "Does not use an in-session or fork agent as executor"
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "economy-launch-windows: Launch claude-run.ps1 for the approved brief on Windows and review as soon as it finishes. Avoid wasting turns waiting.",
+      "expected_output": "The orchestrator uses the available native background process and completion-wait mechanism with output redirected to launcher.log, sizes -TimeoutMinutes and -MaxBudgetUsd to the lot, reads the exit code from meta.json, and starts the reviewer's independent check in the background while reading the diff grouped by layer.",
+      "files": [],
+      "expectations": [
+        "Uses the PowerShell tool's native background/completion-wait mechanism with a launcher.log redirect, not the Bash tool",
+        "Creates no sleeping or polling turns and reads meta.json rather than trusting a detached-exit notification",
+        "Passes -TimeoutMinutes and -MaxBudgetUsd sized to the lot",
+        "Runs the independent reviewer check in the background while reading the diff"
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "economy-known-state: Lot 1 is already committed and green (commits a1b2c3d4 and e5f6a7b8). Prepare the lot 2 brief for the implementer and have them build on the completed and verified work.",
+      "expected_output": "The orchestrator fills the brief's Known state with the lot 1 commits, the files already in place and the green evidence, lists the files each task must read first with line ranges for large ones, keeps the brief under the size warning, and tells the executor to build on that state rather than re-reading, re-running or re-committing it.",
+      "files": [],
+      "expectations": [
+        "Fills the Known state section with commits, files and green evidence instead of leaving it as a fill marker",
+        "Lists the files to read first, with line ranges for large files",
+        "Does not ask the executor to rerun the lot 1 suite or re-verify lot 1 work",
+        "Keeps the brief within the briefWarnChars budget"
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "economy-quota-unreadable: claude-run.ps1 refused the launch with exit 4 because codeburn is unresponsive. What do you do?",
+      "expected_output": "The orchestrator treats the missing reading as a closed gate and uses -SkipQuotaCheck only after an authoritative current provider reading is below the cap; otherwise it keeps the guard and uses an authorized alternative with confirmed headroom. Local usage.js estimates never establish remaining provider quota.",
+      "files": [],
+      "expectations": [
+        "Recognizes exit 4 as a fail-closed quota gate, not an execution failure",
+        "Requires an authoritative current provider reading below the cap before overriding",
+        "Keeps the guard and uses an authorized alternative with confirmed headroom when no authoritative reading exists",
+        "Does not retry in a loop or start a parallel executor"
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "economy-resume-completed: The lot is already complete and the full gate passed, with command, environment, fingerprint, exit code, counts, log, and owner recorded. Resume the review on the same content and prepare the already authorized finish.",
+      "expected_output": "The main session reuses the matching green evidence, reviews only missing diff scope plus one orthogonal check, and continues the authorized finish without resuming the executor or repeating the full gate.",
+      "files": [],
+      "expectations": [
+        "Matches command, cwd/environment, source scope plus fingerprint, exit/count, log and owner",
+        "Does not resume a completed executor or repeat an identical full gate",
+        "Records checked scope and next action",
+        "Keeps finish authorization from the current request"
+      ]
+    },
+    {
+      "id": 20,
+      "prompt": "economy-bounded-model-route: Prepare the brief for a routine, well-scoped task. Show the normal Codex route and the already authorized Claude alternative when its quota has headroom.",
+      "expected_output": "The normal route is one concise brief launched with gpt-6.1-terra medium; the authorized Claude alternative uses the same brief with Haiku 5.5 medium only when quota has headroom. Both use launchers and the main session reviews.",
+      "files": [],
+      "expectations": [
+        "Keeps the brief under 6000 characters and one coherent lot",
+        "Routes Codex to gpt-6.1-terra with medium effort",
+        "Routes the authorized Claude alternative to claude-haiku-5-5 with medium effort and quota headroom",
+        "Uses no in-session executor and does not change models mid-session"
+      ]
+    },
+    {
+      "id": 21,
+      "prompt": "economy-high-deletion-route: The approved plan deletes data and changes two layers. Choose Codex or Claude, execute, review, and assign the relevant local gate. Keep the branch local.",
+      "expected_output": "The HIGH deletion lot uses Sol high, or Opus high as the authorized Claude route, through one launcher. The executor owns targeted tests and the one assigned relevant full gate; the main session reviews the complete diff and one orthogonal check without pushing.",
+      "files": [],
+      "expectations": [
+        "Classifies deletion as HIGH and selects Sol high or authorized Opus high",
+        "Uses one launcher executor and preserves deletion and quota guards",
+        "Assigns one owner to the relevant full gate",
+        "Main-session review covers the complete diff and an orthogonal check without duplicate suites"
+      ]
+    },
+    {
+      "id": 22,
+      "prompt": "retro after a run with a fix loop: Finish the reviewed SampleApp request and turn the recurring failure into prevention.",
+      "expected_output": "The main session reads run artifacts and retro-scan numbers, writes a ranked retro.md with evidence and one action per candidate, and creates an accepted retro issue when tracking is enabled.",
+      "files": [],
+      "expectations": [
+        "Never reads transcripts",
+        "Ranks frequency times cost with evidence paths",
+        "Uses a deterministic check for a mechanical mistake",
+        "Labels accepted tracker candidates retro"
+      ]
+    },
+    {
+      "id": 23,
+      "prompt": "two-lot request in a tracker-enabled repo: Execute the approved SampleApp plan with two vertical slices and a dependency.",
+      "expected_output": "The main session creates a parent and one sub-issue per lot, links numeric REST issue IDs and blocked-by, passes -Issue to new-brief, and includes Closes #n in the PR.",
+      "files": [],
+      "expectations": [
+        "Creates labels on first use",
+        "Falls back to body relationship lines if APIs are unavailable",
+        "Executors never call gh",
+        "Each vertical slice has an unchecked acceptance checklist"
+      ]
+    },
+    {
+      "id": 24,
+      "prompt": "cross-review-high-brief: The approved plan changes authentication (HIGH risk). Prepare and launch the brief. The read-only review returns REVISE with two findings.",
+      "expected_output": "Before launching the HIGH brief, the main session writes review-1/brief.md and runs codex-run.ps1 -ReadOnly with gpt-6.2-sol at high. It arbitrates each finding, edits the brief for accepted ones, records the reason for rejected ones, and dispatches only after arbitration.",
+      "files": [],
+      "expectations": [
+        "Runs the read-only brief review before launch, not after",
+        "Arbitrates every REVISE finding: accepted edits the brief, rejected records its reason",
+        "Treats exit 0 as a valid review, not approval, and never counts BLOCKED, failed, or malformed as approval",
+        "Allows at most two rounds, the second only with -Resume and -ReadOnly after material brief changes"
+      ]
+    },
+    {
+      "id": 25,
+      "prompt": "second-opinion after two failed fix loops: The gate still fails for the same unexplained reason after the second fix loop on SampleApp.",
+      "expected_output": "The main session routes to second-opinion instead of a third loop: one read-only review in a fresh session with the reproduction, evidence, and failed approaches, asking for a testable alternative explanation, then briefs the fix.",
+      "files": [],
+      "expectations": [
+        "Does not start a third fix loop",
+        "Runs one read-only review in a fresh session, never the failing executor's",
+        "Gives the reproduction, evidence, and failed approaches and asks for a testable alternative explanation",
+        "Briefs the fix after the review"
+      ]
+    }
+  ]
+}

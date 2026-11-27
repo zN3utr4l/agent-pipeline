@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "defaults": {
+    "githubAccounts": {
+      "{{root}}": "fixture-reader"
+    },
+    "autoCompactTokens": 200000,
+    "claudeAutoCompactTokens": 400000,
+    "maxFixLoops": 2,
+    "gateRetries": 1,
+    "quotaCapPercent": 85,
+    "quotaCapPercentResume": 85,
+    "quotaCacheTtlSeconds": 600,
+    "quotaRefreshTimeoutSeconds": 150,
+    "maxResumeContextTokens": 150000,
+    "maxBudgetUsd": 30,
+    "briefWarnChars": 6000,
+    "model": "claude-opus-5-5",
+    "codexModel": "gpt-6.2-sol"
+  },
+  "executors": {
+    "sample-app": {
+      "github": "fixture-team/SampleApp",
+      "repo": "{{root}}\\repos\\sample-app",
+      "gateOwner": "executor",
+      "flutterSdk": "{{root}}\\tooling\\flutter",
+      "writableRoots": [
+        "{{root}}\\tooling\\flutter\\bin\\cache",
+        "{{root}}\\tooling\\pub-cache",
+        "{{root}}\\tooling\\dart-server"
+      ],
+      "logDir": "build\\pipeline",
+      "commands": {
+        "targetedTest": "flutter test <target>",
+        "analyze": "flutter analyze; flutter test test/architecture",
+        "regenerate": "dart run build_runner build; flutter gen-l10n",
+        "fullGate": "flutter test --concurrency=3",
+        "e2e": "none"
+      }
+    },
+    "sample-log": {
+      "github": "fixture-team/SampleLog",
+      "repo": "{{root}}\\repos\\sample-log",
+      "gateOwner": "executor",
+      "writableRoots": [
+        "{{root}}\\tooling\\flutter\\bin\\cache",
+        "{{root}}\\tooling\\pub-cache",
+        "{{root}}\\tooling\\dart-server"
+      ],
+      "logDir": "node_modules\\.pipeline-logs",
+      "commands": {
+        "targetedTest": "npm run test:run -- <target>",
+        "analyze": "npm run lint:check; npm run type-check",
+        "regenerate": "none",
+        "fullGate": "npm run test:run",
+        "e2e": "npm run test:e2e -- <spec>"
+      },
+      "briefNotes": [
+        "For e2e use `PW_PORT=4199 PW_REUSE_DIST=1 npm run test:e2e`, which starts and stops its own server; never run `npm run preview` or `vite preview` alone.",
+        "A new worktree runs `npm ci`; a node_modules junction breaks vitest (`ERR_MODULE_NOT_FOUND`)."
+      ]
+    },
+    "sample-web": {
+      "github": "fixture-team/SampleWeb",
+      "repo": "{{root}}\\repos\\sample-web",
+      "gateOwner": "executor",
+      "writableRoots": [
+        "{{root}}\\tooling\\flutter\\bin\\cache",
+        "{{root}}\\tooling\\pub-cache",
+        "{{root}}\\tooling\\dart-server"
+      ],
+      "logDir": "node_modules\\.pipeline-logs",
+      "commands": {
+        "targetedTest": "npm run test:run -- <target>",
+        "analyze": "npm run lint:check; npm run type-check",
+        "regenerate": "none",
+        "fullGate": "npm run test:ci -- --maxWorkers=6",
+        "e2e": "npm run test:e2e -- <spec>"
+      },
+      "briefNotes": [
+        "Never run prettier on `.vue` files.",
+        "If a lot touches `.github/` or `scripts/`, also run `node --test scripts/*.test.mjs` (CI step Ops tooling tests), which is not part of `test:ci`.",
+        "The full gate is `npm run test:ci -- --maxWorkers=6`; at default concurrency a PDF test in `packages/crawler` times out at 5 s.",
+        "Run e2e one Playwright project at a time so each command stays under 10 minutes."
+      ]
+    },
+    "pipeline-tools": {
+      "repo": "{{root}}",
+      "gateOwner": "executor",
+      "writableRoots": [],
+      "logDir": "logs\\pipeline",
+      "commands": {
+        "targetedTest": "pwsh -NoProfile -File tests\\<test>.ps1",
+        "analyze": "none",
+        "regenerate": "none",
+        "fullGate": "pwsh -NoProfile -File tests\\run-all.ps1",
+        "e2e": "none"
+      },
+      "briefNotes": [
+        "Local Git repository without a remote: read Git only (status, diff); the orchestrator commits accepted lots on main.",
+        "tests\\test-codex-run.ps1 and tests\\test-claude-run.ps1 copy a fixture hub: a new file that bin scripts read must join their copy lists (allow both files)."
+      ]
+    },
+    "sample-cli": {
+      "repo": "{{root}}\\repos\\sample-cli",
+      "flutterSdk": "{{root}}\\tooling\\flutter",
+      "writableRoots": [
+        "{{root}}\\tooling\\flutter\\bin\\cache",
+        "{{root}}\\tooling\\pub-cache",
+        "{{root}}\\tooling\\dart-server"
+      ],
+      "logDir": "build\\pipeline",
+      "commands": {
+        "targetedTest": "flutter test <target>",
+        "analyze": "flutter analyze",
+        "regenerate": "dart run build_runner build --delete-conflicting-outputs",
+        "fullGate": "flutter test",
+        "e2e": "none"
+      }
+    },
+    "acme-api": {
+      "repo": "{{root}}\\repos\\acme-api",
+      "writableRoots": [],
+      "gateRetries": 0,
+      "gateTimeoutMinutes": 30,
+      "heavyGate": true,
+      "logDir": ".pipeline-logs",
+      "commands": {
+        "targetedTest": "dotnet test tests/Acme.Api.Tests -c Release --filter \"FullyQualifiedName~<target>\"",
+        "analyze": "dotnet build Acme.Api.sln -c Release",
+        "regenerate": "none",
+        "fullGate": [
+          "dotnet test tests/Acme.Api.Tests -c Release --filter \"Category=Integration\"",
+          "dotnet test tests/Acme.Worker.Tests -c Release --filter \"Category=Integration\""
+        ],
+        "e2e": "none"
+      },
+      "briefNotes": [
+        "Before the report, run the whole unit suite of each test project you touched. The full gate runs the API and worker integration suites."
+      ]
+    },
+    "acme-web": {
+      "repo": "{{root}}\\repos\\acme-web",
+      "writableRoots": [],
+      "gateOwner": "executor",
+      "logDir": ".pipeline-logs",
+      "commands": {
+        "targetedTest": "npm test -- <target>",
+        "analyze": "npm run lint",
+        "regenerate": "npm run generate",
+        "fullGate": "npm test",
+        "e2e": "npm run test:e2e -- <spec>"
+      },
+      "briefNotes": [
+        "Run `npm ci` in a fresh checkout before testing."
+      ]
+    },
+    "acme-docs": {
+      "repo": "{{root}}\\repos\\acme-docs",
+      "writableRoots": [],
+      "gateOwner": "executor",
+      "logDir": ".pipeline-logs",
+      "commands": {
+        "targetedTest": "none",
+        "analyze": "none",
+        "regenerate": "none",
+        "fullGate": "npm --prefix website run build",
+        "e2e": "none"
+      }
+    }
+  }
+}

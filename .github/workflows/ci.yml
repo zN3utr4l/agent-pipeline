@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Install offline fixture runners
+        run: |
+          npm install --no-save --prefix .pipeline-logs/tools @anthropic-ai/claude-code@2.1.332 @openai/codex@0.172.0
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $nodeModules = Join-Path $PWD '.pipeline-logs/tools/node_modules'
+          $codex = Get-ChildItem (Join-Path $nodeModules '@openai') -Filter codex.exe -File -Recurse | Select-Object -First 1
+          if (-not $codex) { throw 'Codex native test executable was not installed.' }
+          (Join-Path $nodeModules '.bin') >> $env:GITHUB_PATH
+          "CODEX_NATIVE_EXE=$($codex.FullName)" >> $env:GITHUB_ENV
+      - name: Pipeline test suites
+        run: pwsh -NoProfile -File plugins/pipeline/tests/run-all.ps1 -GateLogPath .pipeline-logs/ci/pipeline/gate.log
+      - name: Pipeline UTF-8 issue fixture
+        run: pwsh -NoProfile -File plugins/pipeline/skills/pipeline/scripts/test-new-brief-utf8.ps1
+      - name: Cockpit test suites and marketplace validation
+        run: pwsh -NoProfile -File plugins/cockpit/tests/test-codex-parity.ps1 -LogDirectory .pipeline-logs/ci/cockpit
+      - name: GitHub account guard fixtures
+        run: |
+          claude plugin validate ./plugins/gh-guard
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          claude plugin test ./plugins/gh-guard

@@ -1,0 +1,66 @@
+{
+  "name": "cockpit",
+  "description": "Above-prompt dashboard for prompt cache, quota resets, Codex quota, pipeline executors, and pull requests. Windows notifications and a tab indicator for permissions, questions, and completion. Guards codex-run and claude-run launches.",
+  "author": {
+    "name": "Giuseppe Chirico",
+    "url": "https://github.com/zN3utr4l"
+  },
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "ttl": {
+      "type": "string",
+      "title": "Prompt cache TTL",
+      "description": "Auto starts at 1 hour and changes to 5 minutes when a quota window reaches 100% or a model change signals it.",
+      "default": "auto",
+      "options": ["auto", "1h", "5m"]
+    },
+    "warnMinutes": {
+      "type": "number",
+      "title": "Cache warning lead time (minutes)",
+      "description": "How many minutes before the cache expires to warn. Set to 0 to disable.",
+      "default": 5
+    },
+    "bigContextK": {
+      "type": "number",
+      "title": "Large context threshold (thousands of tokens)",
+      "description": "Above this threshold, when the cache has expired, the dashboard suggests starting a new chat or using /compact.",
+      "default": 150
+    },
+    "codexQuotaMinutes": {
+      "type": "number",
+      "title": "Codex quota refresh interval (minutes)",
+      "description": "How often to read Codex quota with Codeburn. Set to 0 to disable.",
+      "default": 10
+    },
+    "launchGuard": {
+      "type": "boolean",
+      "title": "Launcher guard",
+      "description": "Blocks codex-run without -FullAccess, resumes without -FixLoop, launches without -TimeoutMinutes, and a second executor in the same worktree. codex-run -ReadOnly can omit -FullAccess and -FixLoop, runs even when the worktree is busy, and leaves it available to other executors. Moves foreground launches to the background.",
+      "default": true
+    },
+    "minMinutes": {
+      "type": "number",
+      "title": "Minimum turn time for completion notification (minutes)",
+      "description": "Shows a completion notification for turns at least this long. The tab indicator also appears for shorter turns.",
+      "default": 2
+    },
+    "windowsNotification": {
+      "type": "boolean",
+      "title": "Windows notifications",
+      "description": "Windows notifications for permissions, questions, plans, turns ending, and executors finishing.",
+      "default": true
+    },
+    "tabBadge": {
+      "type": "boolean",
+      "title": "Tab indicator",
+      "description": "Colors the Windows Terminal tab and taskbar button yellow when Claude is waiting for you, green when work finishes, and red for an error.",
+      "default": true
+    },
+    "sound": {
+      "type": "boolean",
+      "title": "Sound",
+      "description": "Windows notification sound.",
+      "default": true
+    }
+  }
+}

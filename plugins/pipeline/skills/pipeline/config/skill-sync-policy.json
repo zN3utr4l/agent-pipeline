@@ -1,0 +1,5 @@
+{
+  "native": ["sentry-create-alert", "sentry-debug-issue", "sentry-fix-stack-traces", "sentry-get-started", "sentry-instrument", "sentry-otel-exporter-setup", "sentry-setup-releases", "sentry-snapshots-cocoa", "built-in-browser", "chrome-browser", "computer-use", "docs", "google-workspace", "skill-creator", "pdf"],
+  "excluded": ["using-superpowers", "executing-plans", "subagent-driven-development", "import-memory", "morning", "deep-research"],
+  "adoptable": ["embedded-captions", "faceless-explainer", "figma", "general-video", "hyperframes", "hyperframes-animation", "hyperframes-audio", "hyperframes-cli", "hyperframes-core", "hyperframes-creative", "hyperframes-keyframes", "hyperframes-registry", "hyperframes-studio", "media-use", "motion-graphics", "music-to-video", "pr-to-video", "product-launch-video", "remotion-to-hyperframes", "slideshow", "talking-head-recut"]
+}
